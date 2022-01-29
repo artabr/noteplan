@@ -1,9 +1,12 @@
-# expo-template-native-base-typescript
+# Noteplan
 
-The official NativeBase TypeScript template for [Expo](https://docs.expo.io/)
+A mobile application for taking notes on building plans and maps.
 
-## Usage
+The official website is [noteplan.ru](https://noteplan.ru/).
+
+## How to use
 
 ```sh
-expo init my-app --template expo-template-native-base-typescript
+expo install
+expo start
 ```

@@ -1,6 +1,7 @@
 {
   "name": "noteplan",
   "version": "1.0.0",
+  "description": "Application for taking notes on building plans and maps.",
   "main": "node_modules/expo/AppEntry.js",
   "keywords": [
     "react",
@@ -9,7 +10,7 @@
     "typescript",
     "nativebase"
   ],
-  "license": "MIT",
+  "license": "GPL-3.0-or-later",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -37,9 +38,9 @@
     "typescript": "~4.0.0"
   },
   "bugs": {
-    "url": "https://github.com/GeekyAnts/nativebase-templates/issues"
+    "url": "https://github.com/artabr/noteplan/issues"
   },
-  "homepage": "https://github.com/GeekyAnts/nativebase-templates#readme",
-  "author": "Aditya Jamuar",
+  "homepage": "https://github.com/artabr/noteplan#readme",
+  "author": "Art Abramov",
   "private": true
 }
