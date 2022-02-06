@@ -1,12 +1,16 @@
 import React from 'react';
 
-import { View, Text } from 'native-base';
+import { View, Text, Column } from 'native-base';
+import { SelectPlan } from '../components';
 
 const Home = () => {
   return (
-    <View flex="1" justifyContent="center" alignItems="center">
-      <Text>Home</Text>
-    </View>
+    <Column>
+      <View flex="1" justifyContent="center" alignItems="center">
+        <Text>Home</Text>
+      </View>
+      <SelectPlan defaultValue="ux" />
+    </Column>
   );
 };
 
