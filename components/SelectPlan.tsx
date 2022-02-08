@@ -24,7 +24,7 @@ const SelectPlan = ({ defaultValue }: Props) => {
           onValueChange={(itemValue) => setSelectedPlan(itemValue)}
           defaultValue={defaultValue}
         >
-          <Select.Item label="Create a new plan" value="ux" />
+          <Select.Item label="Create a new plan..." value="ux" />
           <Select.Item label="Test plan" value="web" />
           <Select.Item label="Other plan" value="cross" />
         </Select>

@@ -22,6 +22,7 @@
     "postinstall": "expo-yarn-workspaces postinstall"
   },
   "dependencies": {
+    "@openspacelabs/react-native-zoomable-view": "https://github.com/openspacelabs/react-native-zoomable-view.git",
     "@react-navigation/bottom-tabs": "^6.1.0",
     "@react-navigation/native": "^6.0.7",
     "expo": "~42.0.0",
