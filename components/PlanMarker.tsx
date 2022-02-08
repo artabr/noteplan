@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Icon, Pressable } from 'native-base';
+import { Box, Pressable } from 'native-base';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 type Props = {
@@ -12,7 +12,6 @@ type Props = {
 const PlanMarker: React.FC<Props> = ({ id, x, y, absolute = true }) => {
   return (
     <Box
-      key={id}
       position={absolute ? 'absolute' : 'relative'}
       left={x}
       top={y}
@@ -27,11 +26,10 @@ const PlanMarker: React.FC<Props> = ({ id, x, y, absolute = true }) => {
               borderRadius="full"
               w="50px"
               h="50px"
+              justifyContent="center"
+              alignItems="center"
             >
-              <Icon
-                size="50px"
-                as={<MaterialCommunityIcons name="map-marker" />}
-              />
+              <MaterialCommunityIcons name="map-marker" size={24} />
             </Box>
           );
         }}

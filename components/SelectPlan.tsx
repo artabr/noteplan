@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Select, Box, CheckIcon, Center } from 'native-base';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 type Props = {
   defaultValue?: string;
@@ -20,6 +21,13 @@ const SelectPlan = ({ defaultValue }: Props) => {
             bg: 'teal.600',
             endIcon: <CheckIcon size="5" />,
           }}
+          dropdownIcon={
+            <MaterialCommunityIcons
+              name="chevron-down"
+              size={24}
+              color="black"
+            />
+          }
           mt={1}
           onValueChange={(itemValue) => setSelectedPlan(itemValue)}
           defaultValue={defaultValue}
