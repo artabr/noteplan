@@ -3,14 +3,16 @@ import { Box, Icon, Pressable } from 'native-base';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 type Props = {
+  id: number;
   x: number;
   y: number;
   absolute?: boolean;
 };
 
-const PlanMarker: React.FC<Props> = ({ x, y, absolute = true }) => {
+const PlanMarker: React.FC<Props> = ({ id, x, y, absolute = true }) => {
   return (
     <Box
+      key={id}
       position={absolute ? 'absolute' : 'relative'}
       left={x}
       top={y}

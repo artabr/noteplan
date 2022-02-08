@@ -44,7 +44,7 @@ const Home = () => {
                 {planMarkers.map((planMarker) => {
                   return (
                     <PlanMarker
-                      key={planMarker.id}
+                      id={planMarker.id}
                       x={planMarker.markerX}
                       y={planMarker.markerY}
                     />
