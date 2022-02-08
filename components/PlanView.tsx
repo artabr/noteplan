@@ -6,13 +6,7 @@ import {
   ZoomableViewEvent,
 } from '@openspacelabs/react-native-zoomable-view';
 import { GestureResponderEvent } from 'react-native';
-import { Location } from './types';
-
-interface PlanMarkerData {
-  id: number;
-  markerX: number;
-  markerY: number;
-}
+import { Location, PlanMarkerData } from './types';
 
 type Props = {
   planMarkersData: PlanMarkerData[];

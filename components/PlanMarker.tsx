@@ -13,8 +13,8 @@ const PlanMarker: React.FC<Props> = ({ id, x, y, absolute = true }) => {
   return (
     <Box
       position={absolute ? 'absolute' : 'relative'}
-      left={x}
-      top={y}
+      left={x - 25}
+      top={y - 25}
       w="50px"
       h="50px"
     >

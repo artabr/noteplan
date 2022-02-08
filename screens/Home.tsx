@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { View, Text, Column, Box } from 'native-base';
 import { SelectPlan, PlanView } from '../components';
-import { Location } from '../components/types';
+import { Location, PlanMarkerData } from '../components/types';
 
 import { planMarkers } from '../config/mockData';
 
@@ -15,8 +15,17 @@ const Home = () => {
     absY: 0,
   });
 
+  const [planMarkersData, setPlanMarkersData] =
+    useState<PlanMarkerData[]>(planMarkers);
+
   const onLocation = (loc: Location) => {
     setLocation(loc);
+    const newMarker: PlanMarkerData = {
+      markerX: loc.absX,
+      markerY: loc.absY,
+      id: Date.now(),
+    };
+    setPlanMarkersData([...planMarkersData, newMarker]);
   };
 
   const isActivePlan = true;
@@ -29,7 +38,7 @@ const Home = () => {
       )}
       <View flex="1" justifyContent="center" alignItems="center">
         <View flexShrink="1" w="100%" h="100%">
-          <PlanView planMarkersData={planMarkers} onLocation={onLocation} />
+          <PlanView planMarkersData={planMarkersData} onLocation={onLocation} />
         </View>
       </View>
       <Text>
