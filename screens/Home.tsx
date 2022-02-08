@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 import { GestureResponderEvent } from 'react-native';
 import { View, Text, Column, Box, Image } from 'native-base';
@@ -11,17 +11,63 @@ import { SelectPlan, PlanMarker } from '../components';
 import { planMarkers } from '../config/mockData';
 
 const Home = () => {
+  const elementRef = useRef();
+
   const onSingleTap = (
     event: GestureResponderEvent,
     zoomableViewEventObject: ZoomableViewEvent
   ): void => {
-    setLocation({
-      x: event.nativeEvent.locationX,
-      y: event.nativeEvent.locationY,
-    });
+    const frameNodeID = elementRef.current._nativeTag;
+    const { target, locationX, locationY } = event.nativeEvent;
+    const { zoomLevel, offsetX, offsetY, originalHeight, originalWidth } =
+      zoomableViewEventObject;
+
+    if (frameNodeID === target) {
+      setLocation({
+        locationX: Math.round(
+          locationX - (2000 * zoomLevel - originalWidth) / (2 * zoomLevel)
+        ),
+        locationY: Math.round(
+          locationY - (1200 * zoomLevel - originalHeight) / (2 * zoomLevel)
+        ),
+        zoomLevel,
+        absX: locationX,
+        absY: locationY,
+      });
+    } else {
+      setLocation({
+        locationX,
+        locationY,
+        zoomLevel,
+        absX: Math.round(
+          (2000 * zoomLevel - originalWidth) / (2 * zoomLevel) -
+            offsetX +
+            locationX / zoomLevel
+        ),
+        absY: Math.round(
+          (1200 * zoomLevel - originalHeight) / (2 * zoomLevel) -
+            offsetY +
+            locationY / zoomLevel
+        ),
+      });
+    }
   };
 
-  const [location, setLocation] = useState({ x: 0, y: 0 });
+  interface Location {
+    locationX: number;
+    locationY: number;
+    zoomLevel: number;
+    absX?: number;
+    absY?: number;
+  }
+
+  const [location, setLocation] = useState<Location>({
+    locationX: 0,
+    locationY: 0,
+    zoomLevel: 0,
+    absX: 0,
+    absY: 0,
+  });
 
   const isActivePlan = true;
   return (
@@ -53,6 +99,7 @@ const Home = () => {
                 })}
               </Box>
               <Image
+                ref={elementRef}
                 w="2000px"
                 h="1200px"
                 position="absolute"
@@ -68,7 +115,8 @@ const Home = () => {
         </View>
       </View>
       <Text>
-        X: {location.x} Y: {location.y}
+        {`Local locationX: ${location.locationX} Local locationY: ${location.locationY} zoomLevel: ${location.zoomLevel} 
+        Absolute locationX: ${location.absX} Absolute locationY: ${location.absY}`}
       </Text>
       <Box p="5">
         <SelectPlan defaultValue="Choose or create a plan" />
