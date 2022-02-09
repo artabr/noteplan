@@ -27,6 +27,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "Application for taking notes on building plans and maps.",
+    "githubUrl": "https://github.com/artabr/noteplan"
   }
 }
