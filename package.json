@@ -2,7 +2,7 @@
   "name": "noteplan",
   "version": "1.0.0",
   "description": "Application for taking notes on building plans and maps.",
-  "main": "__generated__/AppEntry.js",
+  "main": "node_modules/expo/AppEntry.js",
   "keywords": [
     "react",
     "expo",
@@ -18,8 +18,7 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "lint": "eslint . --ext .ts,.tsx .",
-    "lint:fix": "eslint . --fix --ext .ts,.tsx",
-    "postinstall": "expo-yarn-workspaces postinstall"
+    "lint:fix": "eslint . --fix --ext .ts,.tsx"
   },
   "dependencies": {
     "@openspacelabs/react-native-zoomable-view": "https://github.com/openspacelabs/react-native-zoomable-view.git",
