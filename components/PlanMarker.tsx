@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Button, Popover, Box, Pressable } from 'native-base';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
+import { markersAtom } from '../state/atoms';
+import { useAtom } from 'jotai';
+
 type Props = {
   id: number;
   x: number;
@@ -11,6 +14,14 @@ type Props = {
 
 const PlanMarker: React.FC<Props> = ({ id, x, y, absolute = true }) => {
   const [show, setShow] = useState(false);
+  const [, setPlanMarkersData] = useAtom(markersAtom);
+
+  const deleteMarker = (markerID: number) => {
+    setPlanMarkersData((data) =>
+      data.filter((planMarker) => planMarker.id !== markerID)
+    );
+  };
+
   return (
     <Box
       position={absolute ? 'absolute' : 'relative'}
@@ -46,9 +57,7 @@ const PlanMarker: React.FC<Props> = ({ id, x, y, absolute = true }) => {
         <Popover.Content accessibilityLabel="Plan marker information" w="56">
           <Popover.Arrow />
           <Popover.Header>Marker Info</Popover.Header>
-          <Popover.Body>
-            There will be a piece of information about the marker.
-          </Popover.Body>
+          <Popover.Body>ID: {id}</Popover.Body>
           <Popover.Footer justifyContent="flex-end">
             <Button.Group space={2}>
               <Button
@@ -58,7 +67,14 @@ const PlanMarker: React.FC<Props> = ({ id, x, y, absolute = true }) => {
               >
                 Cancel
               </Button>
-              <Button colorScheme="danger">Delete</Button>
+              <Button
+                colorScheme="danger"
+                onPress={() => {
+                  deleteMarker(id);
+                }}
+              >
+                Delete
+              </Button>
             </Button.Group>
           </Popover.Footer>
         </Popover.Content>

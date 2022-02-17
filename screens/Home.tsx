@@ -1,35 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { View, Text, Column, Box, useToast } from 'native-base';
 import { SelectPlan, PlanView } from '../components';
 import { Location, PlanMarkerData } from '../components/types';
 
-import { planMarkers } from '../config/mockData';
+import { markersAtom } from '../state/atoms';
+import { useAtom } from 'jotai';
 
 const Home = () => {
   const toast = useToast();
-  const [location, setLocation] = useState<Location>({
-    locationX: 0,
-    locationY: 0,
-    zoomLevel: 0,
-    absX: 0,
-    absY: 0,
-  });
 
-  const [planMarkersData, setPlanMarkersData] =
-    useState<PlanMarkerData[]>(planMarkers);
+  const [planMarkersData, setPlanMarkersData] = useAtom(markersAtom);
 
   const onLocation = (loc: Location) => {
-    toast.show({
-      description: `Local location: X - ${loc.locationX}, Y - ${loc.locationY}\nZoom level: ${loc.zoomLevel}\nAbsolute location: X - ${loc.absX}, Y - ${loc.absY}`,
-    });
-    setLocation(loc);
     const newMarker: PlanMarkerData = {
       markerX: loc.absX,
       markerY: loc.absY,
       id: Date.now(),
     };
     setPlanMarkersData([...planMarkersData, newMarker]);
+    toast.show({
+      description: `Local location: X - ${loc.locationX}, Y - ${loc.locationY}\nZoom level: ${loc.zoomLevel}\nAbsolute location: X - ${loc.absX}, Y - ${loc.absY}`,
+    });
   };
 
   const isActivePlan = true;
