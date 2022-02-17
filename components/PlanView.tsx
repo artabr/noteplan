@@ -1,11 +1,11 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import PlanMarker from './PlanMarker';
 import { Box, Image } from 'native-base';
 import {
   ReactNativeZoomableView,
   ZoomableViewEvent,
 } from '@openspacelabs/react-native-zoomable-view';
-import { GestureResponderEvent } from 'react-native';
+import { GestureResponderEvent, useWindowDimensions } from 'react-native';
 import { Location, PlanMarkerData } from './types';
 
 type Props = {
@@ -14,6 +14,14 @@ type Props = {
 };
 
 const PlanView = ({ planMarkersData, onLocation }: Props) => {
+  const [imageWidth, imageHeight] = [2000, 1200];
+  const [mapOffset, setMapOffset] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
+  const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+  const imageScale = windowWidth / imageWidth;
+
   const elementRef = useRef();
 
   const onSingleTap = (
@@ -28,14 +36,16 @@ const PlanView = ({ planMarkersData, onLocation }: Props) => {
     if (frameNodeID === target) {
       const loc: Location = {
         locationX: Math.round(
-          locationX - (2000 * zoomLevel - originalWidth) / (2 * zoomLevel)
+          locationX -
+            (originalWidth * zoomLevel - originalWidth) / (2 * zoomLevel)
         ),
         locationY: Math.round(
-          locationY - (1200 * zoomLevel - originalHeight) / (2 * zoomLevel)
+          locationY -
+            (originalHeight * zoomLevel - originalHeight) / (2 * zoomLevel)
         ),
         zoomLevel: Math.round(zoomLevel * 100) / 100,
-        absX: Math.round(locationX),
-        absY: Math.round(locationY),
+        absX: Math.round((locationX - mapOffset.x) / imageScale),
+        absY: Math.round((locationY - mapOffset.y) / imageScale),
       };
       onLocation(loc);
     } else {
@@ -44,12 +54,12 @@ const PlanView = ({ planMarkersData, onLocation }: Props) => {
         locationY: Math.round(locationY),
         zoomLevel: Math.round(zoomLevel * 100) / 100,
         absX: Math.round(
-          (2000 * zoomLevel - originalWidth) / (2 * zoomLevel) -
+          (originalWidth * zoomLevel - originalWidth) / (2 * zoomLevel) -
             offsetX +
             locationX / zoomLevel
         ),
         absY: Math.round(
-          (1200 * zoomLevel - originalHeight) / (2 * zoomLevel) -
+          (originalHeight * zoomLevel - originalHeight) / (2 * zoomLevel) -
             offsetY +
             locationY / zoomLevel
         ),
@@ -61,12 +71,22 @@ const PlanView = ({ planMarkersData, onLocation }: Props) => {
   return (
     <ReactNativeZoomableView
       maxZoom={30}
+      minZoom={0.001}
+      bindToBorders={false}
       onSingleTap={onSingleTap}
-      contentWidth={2000}
-      contentHeight={1200}
     >
-      <Box w="2000px" h="1200px">
-        <Box w="2000px" h="1200px">
+      <Box
+        w="100%"
+        h="100%"
+        onLayout={(event) => {
+          const { width, height } = event.nativeEvent.layout;
+          setMapOffset({
+            x: (width - imageWidth * imageScale) / 2,
+            y: (height - imageHeight * imageScale) / 2,
+          });
+        }}
+      >
+        <Box w="100%" h="100%">
           {planMarkersData.map((planMarker) => {
             return (
               <PlanMarker
@@ -74,14 +94,16 @@ const PlanView = ({ planMarkersData, onLocation }: Props) => {
                 id={planMarker.id}
                 x={planMarker.markerX}
                 y={planMarker.markerY}
+                imageScale={imageScale}
+                mapOffset={mapOffset}
               />
             );
           })}
         </Box>
         <Image
           ref={elementRef}
-          w="2000px"
-          h="1200px"
+          w="100%"
+          h="100%"
           position="absolute"
           zIndex="-1"
           resizeMode="contain"

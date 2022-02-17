@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Popover, Box, Pressable } from 'native-base';
+import { Button, Popover, Box, Pressable, Text } from 'native-base';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { markersAtom } from '../state/atoms';
@@ -10,9 +10,18 @@ type Props = {
   x: number;
   y: number;
   absolute?: boolean;
+  imageScale: number;
+  mapOffset: { x: number; y: number };
 };
 
-const PlanMarker: React.FC<Props> = ({ id, x, y, absolute = true }) => {
+const PlanMarker: React.FC<Props> = ({
+  id,
+  x,
+  y,
+  absolute = true,
+  imageScale,
+  mapOffset,
+}) => {
   const [show, setShow] = useState(false);
   const [, setPlanMarkersData] = useAtom(markersAtom);
 
@@ -22,13 +31,15 @@ const PlanMarker: React.FC<Props> = ({ id, x, y, absolute = true }) => {
     );
   };
 
+  const iconSize = 50 * imageScale + 'px';
+
   return (
     <Box
       position={absolute ? 'absolute' : 'relative'}
-      left={x - 25}
-      top={y - 25}
-      w="50px"
-      h="50px"
+      left={(x - 25) * imageScale + mapOffset.x}
+      top={(y - 25) * imageScale + mapOffset.y}
+      w={iconSize}
+      h={iconSize}
     >
       <Popover
         isOpen={show}
@@ -41,12 +52,15 @@ const PlanMarker: React.FC<Props> = ({ id, x, y, absolute = true }) => {
                   <Box
                     bg={isPressed ? '#2ddb3b' : '#ff0095'}
                     borderRadius="full"
-                    w="50px"
-                    h="50px"
+                    w={iconSize}
+                    h={iconSize}
                     justifyContent="center"
                     alignItems="center"
                   >
-                    <MaterialCommunityIcons name="map-marker" size={24} />
+                    <MaterialCommunityIcons
+                      name="map-marker"
+                      size={24 * imageScale}
+                    />
                   </Box>
                 );
               }}
@@ -57,7 +71,11 @@ const PlanMarker: React.FC<Props> = ({ id, x, y, absolute = true }) => {
         <Popover.Content accessibilityLabel="Plan marker information" w="56">
           <Popover.Arrow />
           <Popover.Header>Marker Info</Popover.Header>
-          <Popover.Body>ID: {id}</Popover.Body>
+          <Popover.Body>
+            <Text>ID: {id}</Text>
+            <Text>X: {x}</Text>
+            <Text>Y: {y}</Text>
+          </Popover.Body>
           <Popover.Footer justifyContent="flex-end">
             <Button.Group space={2}>
               <Button

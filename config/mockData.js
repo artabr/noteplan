@@ -1,28 +1,18 @@
 export const planMarkers = [
   {
-    id: 1,
-    markerX: 300,
-    markerY: 400,
+    id: 1645111031994,
+    markerX: 400,
+    markerY: 600,
   },
   {
-    id: 2,
+    id: 1645111046919,
     markerX: 1000,
-    markerY: 500,
+    markerY: 800,
   },
   {
-    id: 3,
-    markerX: 1100,
-    markerY: 500,
-  },
-  {
-    id: 4,
-    markerX: 900,
-    markerY: 500,
-  },
-  {
-    id: 5,
-    markerX: 1800,
-    markerY: 100,
+    id: 1645111070401,
+    markerX: 1400,
+    markerY: 600,
   },
 ];
 
