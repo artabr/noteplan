@@ -33,16 +33,16 @@ const PlanView = ({ planMarkersData, onLocation }: Props) => {
         locationY: Math.round(
           locationY - (1200 * zoomLevel - originalHeight) / (2 * zoomLevel)
         ),
-        zoomLevel,
-        absX: locationX,
-        absY: locationY,
+        zoomLevel: Math.round(zoomLevel * 100) / 100,
+        absX: Math.round(locationX),
+        absY: Math.round(locationY),
       };
       onLocation(loc);
     } else {
       const loc: Location = {
-        locationX,
-        locationY,
-        zoomLevel,
+        locationX: Math.round(locationX),
+        locationY: Math.round(locationY),
+        zoomLevel: Math.round(zoomLevel * 100) / 100,
         absX: Math.round(
           (2000 * zoomLevel - originalWidth) / (2 * zoomLevel) -
             offsetX +

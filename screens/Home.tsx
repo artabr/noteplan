@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 
-import { View, Text, Column, Box } from 'native-base';
+import { View, Text, Column, Box, useToast } from 'native-base';
 import { SelectPlan, PlanView } from '../components';
 import { Location, PlanMarkerData } from '../components/types';
 
 import { planMarkers } from '../config/mockData';
 
 const Home = () => {
+  const toast = useToast();
   const [location, setLocation] = useState<Location>({
     locationX: 0,
     locationY: 0,
@@ -19,6 +20,9 @@ const Home = () => {
     useState<PlanMarkerData[]>(planMarkers);
 
   const onLocation = (loc: Location) => {
+    toast.show({
+      description: `Local location: X - ${loc.locationX}, Y - ${loc.locationY}\nZoom level: ${loc.zoomLevel}\nAbsolute location: X - ${loc.absX}, Y - ${loc.absY}`,
+    });
     setLocation(loc);
     const newMarker: PlanMarkerData = {
       markerX: loc.absX,
@@ -41,10 +45,6 @@ const Home = () => {
           <PlanView planMarkersData={planMarkersData} onLocation={onLocation} />
         </View>
       </View>
-      <Text>
-        {`Local locationX: ${location.locationX} Local locationY: ${location.locationY} zoomLevel: ${location.zoomLevel} 
-        Absolute locationX: ${location.absX} Absolute locationY: ${location.absY}`}
-      </Text>
       <Box p="5">
         <SelectPlan defaultValue="Choose or create a plan" />
       </Box>
