@@ -5,8 +5,8 @@ import {
   ReactNativeZoomableView,
   ZoomableViewEvent,
 } from '@openspacelabs/react-native-zoomable-view';
-import { GestureResponderEvent, useWindowDimensions } from 'react-native';
-import { Location, PlanMarkerData } from './types';
+import { GestureResponderEvent, LayoutChangeEvent } from 'react-native';
+import { Location, PlanMarkerData, ZoomableExtents } from './types';
 
 type Props = {
   planMarkersData: PlanMarkerData[];
@@ -15,12 +15,13 @@ type Props = {
 
 const PlanView = ({ planMarkersData, onLocation }: Props) => {
   const [imageWidth, imageHeight] = [2000, 1200];
-  const [mapOffset, setMapOffset] = useState<{ x: number; y: number }>({
-    x: 0,
-    y: 0,
+  const [zoomableExtents, setZoomableExtents] = useState<ZoomableExtents>({
+    width: 0,
+    height: 0,
+    offsetX: 0,
+    offsetY: 0,
+    scale: 0,
   });
-  const { width: windowWidth, height: windowHeight } = useWindowDimensions();
-  const imageScale = windowWidth / imageWidth;
 
   const elementRef = useRef();
 
@@ -44,8 +45,12 @@ const PlanView = ({ planMarkersData, onLocation }: Props) => {
             (originalHeight * zoomLevel - originalHeight) / (2 * zoomLevel)
         ),
         zoomLevel: Math.round(zoomLevel * 100) / 100,
-        absX: Math.round((locationX - mapOffset.x) / imageScale),
-        absY: Math.round((locationY - mapOffset.y) / imageScale),
+        absX: Math.round(
+          (locationX - zoomableExtents.offsetX) / zoomableExtents.scale
+        ),
+        absY: Math.round(
+          (locationY - zoomableExtents.offsetY) / zoomableExtents.scale
+        ),
       };
       onLocation(loc);
     } else {
@@ -68,6 +73,27 @@ const PlanView = ({ planMarkersData, onLocation }: Props) => {
     }
   };
 
+  const onZoomableLayout = (event: LayoutChangeEvent): void => {
+    const { width, height } = event.nativeEvent.layout;
+    let scale = 0;
+
+    if ((width / imageWidth) * imageHeight <= height) {
+      // The scaled image is limited to the width of the zoomable view.
+      scale = width / imageWidth;
+    } else {
+      // The scaled image is limited to the height of the zoomable view.
+      scale = height / imageHeight;
+    }
+
+    setZoomableExtents({
+      width,
+      height,
+      offsetX: (width - imageWidth * scale) / 2,
+      offsetY: (height - imageHeight * scale) / 2,
+      scale,
+    });
+  };
+
   return (
     <ReactNativeZoomableView
       maxZoom={30}
@@ -75,17 +101,7 @@ const PlanView = ({ planMarkersData, onLocation }: Props) => {
       bindToBorders={false}
       onSingleTap={onSingleTap}
     >
-      <Box
-        w="100%"
-        h="100%"
-        onLayout={(event) => {
-          const { width, height } = event.nativeEvent.layout;
-          setMapOffset({
-            x: (width - imageWidth * imageScale) / 2,
-            y: (height - imageHeight * imageScale) / 2,
-          });
-        }}
-      >
+      <Box w="100%" h="100%" onLayout={onZoomableLayout}>
         <Box w="100%" h="100%">
           {planMarkersData.map((planMarker) => {
             return (
@@ -94,8 +110,7 @@ const PlanView = ({ planMarkersData, onLocation }: Props) => {
                 id={planMarker.id}
                 x={planMarker.markerX}
                 y={planMarker.markerY}
-                imageScale={imageScale}
-                mapOffset={mapOffset}
+                zoomableExtents={zoomableExtents}
               />
             );
           })}

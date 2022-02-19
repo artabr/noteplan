@@ -11,3 +11,11 @@ export interface PlanMarkerData {
   markerX: number;
   markerY: number;
 }
+
+export interface ZoomableExtents {
+  width: number;
+  height: number;
+  offsetX: number;
+  offsetY: number;
+  scale: number;
+}

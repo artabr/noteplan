@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Popover, Box, Pressable, Text } from 'native-base';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { ZoomableExtents } from './types';
 
 import { markersAtom } from '../state/atoms';
 import { useAtom } from 'jotai';
@@ -10,8 +11,7 @@ type Props = {
   x: number;
   y: number;
   absolute?: boolean;
-  imageScale: number;
-  mapOffset: { x: number; y: number };
+  zoomableExtents: ZoomableExtents;
 };
 
 const PlanMarker: React.FC<Props> = ({
@@ -19,8 +19,7 @@ const PlanMarker: React.FC<Props> = ({
   x,
   y,
   absolute = true,
-  imageScale,
-  mapOffset,
+  zoomableExtents,
 }) => {
   const [show, setShow] = useState(false);
   const [, setPlanMarkersData] = useAtom(markersAtom);
@@ -31,13 +30,13 @@ const PlanMarker: React.FC<Props> = ({
     );
   };
 
-  const iconSize = 50 * imageScale + 'px';
+  const iconSize = 50 * zoomableExtents.scale + 'px';
 
   return (
     <Box
       position={absolute ? 'absolute' : 'relative'}
-      left={(x - 25) * imageScale + mapOffset.x}
-      top={(y - 25) * imageScale + mapOffset.y}
+      left={(x - 25) * zoomableExtents.scale + zoomableExtents.offsetX}
+      top={(y - 25) * zoomableExtents.scale + zoomableExtents.offsetY}
       w={iconSize}
       h={iconSize}
     >
@@ -59,7 +58,7 @@ const PlanMarker: React.FC<Props> = ({
                   >
                     <MaterialCommunityIcons
                       name="map-marker"
-                      size={24 * imageScale}
+                      size={24 * zoomableExtents.scale}
                     />
                   </Box>
                 );
