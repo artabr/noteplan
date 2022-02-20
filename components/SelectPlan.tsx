@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { Select, Box, CheckIcon, Center } from 'native-base';
+import { Select, Box, CheckIcon, Center, Text } from 'native-base';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useAtom } from 'jotai';
+import { getAllPlansAtom } from '../state/atoms';
+import { PlanEntity } from '../graphql/types';
 
 type Props = {
   defaultValue?: string;
@@ -8,6 +11,11 @@ type Props = {
 
 const SelectPlan = ({ defaultValue }: Props) => {
   const [selectedPlan, setSelectedPlan] = useState('');
+  const [{ data, error }] = useAtom(getAllPlansAtom);
+
+  if (error) {
+    return <Text>Oh no... {error.message}</Text>;
+  }
 
   return (
     <Center>
@@ -32,9 +40,14 @@ const SelectPlan = ({ defaultValue }: Props) => {
           onValueChange={(itemValue) => setSelectedPlan(itemValue)}
           defaultValue={defaultValue}
         >
-          <Select.Item label="Create a new plan..." value="ux" />
-          <Select.Item label="Test plan" value="web" />
-          <Select.Item label="Other plan" value="cross" />
+          <Select.Item label="Create a new plan..." value="newplan" />
+          {data?.plans.data.map(({ attributes, id }: PlanEntity) => (
+            <Select.Item
+              key={id}
+              label={attributes?.title ? attributes?.title : ''}
+              value={id ? id : ''}
+            />
+          ))}
         </Select>
       </Box>
     </Center>

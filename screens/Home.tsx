@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import { View, Text, Column, Box, useToast } from 'native-base';
 import { SelectPlan, PlanView } from '../components';
@@ -38,7 +38,9 @@ const Home = () => {
         </View>
       </View>
       <Box p="5">
-        <SelectPlan defaultValue="Choose or create a plan" />
+        <Suspense fallback={<Text>Loading...</Text>}>
+          <SelectPlan defaultValue="Choose or create a plan" />
+        </Suspense>
       </Box>
     </Column>
   );
