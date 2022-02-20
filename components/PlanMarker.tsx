@@ -1,30 +1,27 @@
 import React, { useState } from 'react';
 import { Button, Popover, Box, Pressable, Text } from 'native-base';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { ZoomableExtents } from './types';
+import { PlanMarkerData, ZoomableExtents } from './types';
 
 import { markersAtom } from '../state/atoms';
 import { useAtom } from 'jotai';
 
 type Props = {
-  id: number;
-  x: number;
-  y: number;
+  planMarkerData: PlanMarkerData;
   absolute?: boolean;
   zoomableExtents: ZoomableExtents;
 };
 
 const PlanMarker: React.FC<Props> = ({
-  id,
-  x,
-  y,
+  planMarkerData,
   absolute = true,
   zoomableExtents,
 }) => {
+  const { id, markerX: x = 0, markerY: y = 0 } = planMarkerData;
   const [show, setShow] = useState(false);
   const [, setPlanMarkersData] = useAtom(markersAtom);
 
-  const deleteMarker = (markerID: number) => {
+  const deleteMarker = (markerID?: string | null) => {
     setPlanMarkersData((data) =>
       data.filter((planMarker) => planMarker.id !== markerID)
     );
@@ -42,6 +39,7 @@ const PlanMarker: React.FC<Props> = ({
     >
       <Popover
         isOpen={show}
+        // @ts-ignore
         onClose={setShow}
         trigger={(triggerProps) => {
           return (

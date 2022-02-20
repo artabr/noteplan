@@ -7,9 +7,9 @@ export interface Location {
 }
 
 export interface PlanMarkerData {
-  id: number;
-  markerX: number;
-  markerY: number;
+  id?: string | null;
+  markerX?: number;
+  markerY?: number;
 }
 
 export interface ZoomableExtents {

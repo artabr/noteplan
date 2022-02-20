@@ -16,7 +16,7 @@ const Home = () => {
     const newMarker: PlanMarkerData = {
       markerX: loc.absX,
       markerY: loc.absY,
-      id: Date.now(),
+      id: Date.now().toString(),
     };
     setPlanMarkersData([...planMarkersData, newMarker]);
     toast.show({
@@ -34,7 +34,12 @@ const Home = () => {
       )}
       <View flex="1" justifyContent="center" alignItems="center">
         <View flexShrink="1" w="100%" h="100%">
-          <PlanView planMarkersData={planMarkersData} onLocation={onLocation} />
+          <Suspense fallback={<Text>Loading...</Text>}>
+            <PlanView
+              planMarkersData={planMarkersData}
+              onLocation={onLocation}
+            />
+          </Suspense>
         </View>
       </View>
       <Box p="5">

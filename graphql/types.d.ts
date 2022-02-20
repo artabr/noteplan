@@ -101,6 +101,7 @@ export type FloatFilterInput = {
 
 export type GenericMorph =
   | I18NLocale
+  | Marker
   | Plan
   | UploadFile
   | UsersPermissionsPermission
@@ -212,14 +213,71 @@ export type JsonFilterInput = {
   startsWith?: InputMaybe<Scalars['JSON']>;
 };
 
+export type Marker = {
+  __typename?: 'Marker';
+  createdAt?: Maybe<Scalars['DateTime']>;
+  note?: Maybe<Scalars['String']>;
+  plan?: Maybe<PlanEntityResponse>;
+  title?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  x: Scalars['Float'];
+  y: Scalars['Float'];
+};
+
+export type MarkerEntity = {
+  __typename?: 'MarkerEntity';
+  attributes?: Maybe<Marker>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type MarkerEntityResponse = {
+  __typename?: 'MarkerEntityResponse';
+  data?: Maybe<MarkerEntity>;
+};
+
+export type MarkerEntityResponseCollection = {
+  __typename?: 'MarkerEntityResponseCollection';
+  data: Array<MarkerEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type MarkerFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<MarkerFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  id?: InputMaybe<IdFilterInput>;
+  not?: InputMaybe<MarkerFiltersInput>;
+  note?: InputMaybe<StringFilterInput>;
+  or?: InputMaybe<Array<InputMaybe<MarkerFiltersInput>>>;
+  plan?: InputMaybe<PlanFiltersInput>;
+  title?: InputMaybe<StringFilterInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+  x?: InputMaybe<FloatFilterInput>;
+  y?: InputMaybe<FloatFilterInput>;
+};
+
+export type MarkerInput = {
+  note?: InputMaybe<Scalars['String']>;
+  plan?: InputMaybe<Scalars['ID']>;
+  title?: InputMaybe<Scalars['String']>;
+  x?: InputMaybe<Scalars['Float']>;
+  y?: InputMaybe<Scalars['Float']>;
+};
+
+export type MarkerRelationResponseCollection = {
+  __typename?: 'MarkerRelationResponseCollection';
+  data: Array<MarkerEntity>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  createMarker?: Maybe<MarkerEntityResponse>;
   createPlan?: Maybe<PlanEntityResponse>;
   createUploadFile?: Maybe<UploadFileEntityResponse>;
   /** Create a new role */
   createUsersPermissionsRole?: Maybe<UsersPermissionsCreateRolePayload>;
   /** Create a new user */
   createUsersPermissionsUser: UsersPermissionsUserEntityResponse;
+  deleteMarker?: Maybe<MarkerEntityResponse>;
   deletePlan?: Maybe<PlanEntityResponse>;
   deleteUploadFile?: Maybe<UploadFileEntityResponse>;
   /** Delete an existing role */
@@ -238,6 +296,7 @@ export type Mutation = {
   /** Reset user password. Confirm with a code (resetToken from forgotPassword) */
   resetPassword?: Maybe<UsersPermissionsLoginPayload>;
   updateFileInfo: UploadFileEntityResponse;
+  updateMarker?: Maybe<MarkerEntityResponse>;
   updatePlan?: Maybe<PlanEntityResponse>;
   updateUploadFile?: Maybe<UploadFileEntityResponse>;
   /** Update an existing role */
@@ -245,6 +304,10 @@ export type Mutation = {
   /** Update an existing user */
   updateUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   upload: UploadFileEntityResponse;
+};
+
+export type MutationCreateMarkerArgs = {
+  data: MarkerInput;
 };
 
 export type MutationCreatePlanArgs = {
@@ -261,6 +324,10 @@ export type MutationCreateUsersPermissionsRoleArgs = {
 
 export type MutationCreateUsersPermissionsUserArgs = {
   data: UsersPermissionsUserInput;
+};
+
+export type MutationDeleteMarkerArgs = {
+  id: Scalars['ID'];
 };
 
 export type MutationDeletePlanArgs = {
@@ -317,6 +384,11 @@ export type MutationUpdateFileInfoArgs = {
   info?: InputMaybe<FileInfoInput>;
 };
 
+export type MutationUpdateMarkerArgs = {
+  data: MarkerInput;
+  id: Scalars['ID'];
+};
+
 export type MutationUpdatePlanArgs = {
   data: PlanInput;
   id: Scalars['ID'];
@@ -363,9 +435,16 @@ export type PaginationArg = {
 export type Plan = {
   __typename?: 'Plan';
   createdAt?: Maybe<Scalars['DateTime']>;
+  markers?: Maybe<MarkerRelationResponseCollection>;
   planImage?: Maybe<UploadFileEntityResponse>;
   title?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type PlanMarkersArgs = {
+  filters?: InputMaybe<MarkerFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type PlanEntity = {
@@ -389,6 +468,7 @@ export type PlanFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<PlanFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   id?: InputMaybe<IdFilterInput>;
+  markers?: InputMaybe<MarkerFiltersInput>;
   not?: InputMaybe<PlanFiltersInput>;
   or?: InputMaybe<Array<InputMaybe<PlanFiltersInput>>>;
   title?: InputMaybe<StringFilterInput>;
@@ -396,6 +476,7 @@ export type PlanFiltersInput = {
 };
 
 export type PlanInput = {
+  markers?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   planImage?: InputMaybe<Scalars['ID']>;
   title?: InputMaybe<Scalars['String']>;
 };
@@ -404,6 +485,8 @@ export type Query = {
   __typename?: 'Query';
   i18NLocale?: Maybe<I18NLocaleEntityResponse>;
   i18NLocales?: Maybe<I18NLocaleEntityResponseCollection>;
+  marker?: Maybe<MarkerEntityResponse>;
+  markers?: Maybe<MarkerEntityResponseCollection>;
   me?: Maybe<UsersPermissionsMe>;
   plan?: Maybe<PlanEntityResponse>;
   plans?: Maybe<PlanEntityResponseCollection>;
@@ -421,6 +504,16 @@ export type QueryI18NLocaleArgs = {
 
 export type QueryI18NLocalesArgs = {
   filters?: InputMaybe<I18NLocaleFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type QueryMarkerArgs = {
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryMarkersArgs = {
+  filters?: InputMaybe<MarkerFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };

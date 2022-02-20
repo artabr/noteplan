@@ -20,3 +20,19 @@ export const GET_ALL_PLANS = gql`
     }
   }
 `;
+
+export const GET_MARKERS_BY_PLAN_ID = gql`
+  query GetMarkersByPlanID($id: ID!) {
+    markers(filters: { plan: { id: { eq: $id } } }) {
+      data {
+        id
+        attributes {
+          x
+          y
+          title
+          note
+        }
+      }
+    }
+  }
+`;

@@ -7,6 +7,8 @@ import {
 } from '@openspacelabs/react-native-zoomable-view';
 import { GestureResponderEvent, LayoutChangeEvent } from 'react-native';
 import { Location, PlanMarkerData, ZoomableExtents } from './types';
+import { markersByPlanIDAtom } from '../state/atoms';
+import { useAtom } from 'jotai';
 
 type Props = {
   planMarkersData: PlanMarkerData[];
@@ -22,6 +24,7 @@ const PlanView = ({ planMarkersData, onLocation }: Props) => {
     offsetY: 0,
     scale: 0,
   });
+  const [planMarkers, setPlanMarkers] = useAtom(markersByPlanIDAtom);
 
   const elementRef = useRef();
 
@@ -29,6 +32,7 @@ const PlanView = ({ planMarkersData, onLocation }: Props) => {
     event: GestureResponderEvent,
     zoomableViewEventObject: ZoomableViewEvent
   ): void => {
+    // @ts-ignore
     const frameNodeID = elementRef.current._nativeTag;
     const { target, locationX, locationY } = event.nativeEvent;
     const { zoomLevel, offsetX, offsetY, originalHeight, originalWidth } =
@@ -103,13 +107,11 @@ const PlanView = ({ planMarkersData, onLocation }: Props) => {
     >
       <Box w="100%" h="100%" onLayout={onZoomableLayout}>
         <Box w="100%" h="100%">
-          {planMarkersData.map((planMarker) => {
+          {planMarkers.map((planMarker) => {
             return (
               <PlanMarker
                 key={planMarker.id}
-                id={planMarker.id}
-                x={planMarker.markerX}
-                y={planMarker.markerY}
+                planMarkerData={planMarker}
                 zoomableExtents={zoomableExtents}
               />
             );
