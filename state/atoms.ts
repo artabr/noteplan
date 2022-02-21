@@ -7,9 +7,12 @@ import {
 } from '../graphql/types';
 import { createClient } from '@urql/core';
 import { MarkerEntity } from '../graphql/types';
+import Constants from 'expo-constants';
 
 const client = createClient({
-  url: 'http://0018-77-222-120-243.ngrok.io/graphql',
+  url:
+    ((Constants.manifest?.extra && Constants.manifest?.extra.backendURL) ||
+      'http://localhost:1337') + '/graphql',
 });
 
 import { PlanMarkerData } from '../components/types';
