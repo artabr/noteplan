@@ -1,8 +1,10 @@
+import 'dotenv/config';
+
 export default ({ config }) => {
   return {
     ...config,
     extra: {
-      backendURL: 'http://3e03-77-222-120-243.ngrok.io',
+      backendURL: process.env.BACKEND_URL,
     },
   };
 };
