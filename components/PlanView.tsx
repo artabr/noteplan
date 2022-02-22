@@ -9,6 +9,9 @@ import { GestureResponderEvent, LayoutChangeEvent } from 'react-native';
 import { Location, PlanMarkerData, ZoomableExtents } from './types';
 import { markersByPlanIDAtom } from '../state/atoms';
 import { useAtom } from 'jotai';
+import { useMutation } from 'urql';
+import { CREATE_MARKER } from '../graphql/mutations';
+import { MarkerInput, MarkerEntityResponse } from '../graphql/types';
 
 type Props = {
   planMarkersData: PlanMarkerData[];
@@ -25,6 +28,10 @@ const PlanView = ({ planMarkersData, onLocation }: Props) => {
     scale: 0,
   });
   const [planMarkers, setPlanMarkers] = useAtom(markersByPlanIDAtom);
+  const [createMarkerResult, createMarker] = useMutation<
+    MarkerEntityResponse,
+    MarkerInput
+  >(CREATE_MARKER);
 
   const elementRef = useRef();
 
@@ -57,6 +64,7 @@ const PlanView = ({ planMarkersData, onLocation }: Props) => {
         ),
       };
       onLocation(loc);
+      createMarker({ x: loc.absX, y: loc.absY, plan: '1' });
     } else {
       const loc: Location = {
         locationX: Math.round(locationX),

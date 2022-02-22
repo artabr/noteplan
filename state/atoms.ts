@@ -4,17 +4,9 @@ import { GET_ALL_PLANS, GET_MARKERS_BY_PLAN_ID } from '../graphql/queries';
 import {
   PlanEntityResponseCollection,
   MarkerRelationResponseCollection,
+  MarkerEntity,
 } from '../graphql/types';
-import { createClient } from '@urql/core';
-import { MarkerEntity } from '../graphql/types';
-import Constants from 'expo-constants';
-
-const client = createClient({
-  url:
-    ((Constants.manifest?.extra && Constants.manifest?.extra.backendURL) ||
-      'http://localhost:1337') + '/graphql',
-});
-
+import { client } from '../graphql/client';
 import { PlanMarkerData } from '../components/types';
 
 import { planMarkers } from '../config/mockData';
